@@ -128,14 +128,14 @@
 .recommended-container{
     display: flex;
     flex-direction: column;
-    margin-top: 5rem;
+    margin: 4rem 0;
 }
 
 .recommended-list{
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: 30%;
-    gap: 1rem;
+    gap: 2rem;
 }
 
 @media(max-width: 78rem){

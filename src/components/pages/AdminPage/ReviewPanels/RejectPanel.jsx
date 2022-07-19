@@ -51,7 +51,6 @@ const RejectPanel = ({lot}) => {
           className='auth-input'
           value={feedback} 
           type={'text'} 
-          required
           onChange={e => setFeedback(e.target.value)}
           style={{'minWidth': '30rem'}}
           />

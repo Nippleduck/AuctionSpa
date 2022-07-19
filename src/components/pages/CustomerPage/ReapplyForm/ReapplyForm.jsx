@@ -78,7 +78,10 @@ const ReapplyForm = ({lot, categories, active}) => {
         .catch(() => setError('could not update lot'))
         .finally(() => setProcessing(false));
       }, {
-        onSuccess: () => queryClient.invalidateQueries(['owned'])
+        onSuccess: () => {
+          queryClient.invalidateQueries(['owned']);
+          queryClient.invalidateQueries(["image", lot.id.toString()]);
+        }
       })
       
         const handleSubmit = async e => {

@@ -11,6 +11,7 @@ import { useState } from 'react'
 import Spinner from '../../shared/Spinner/Spinner'
 import CustomerCreateLotForm from './CustomerCreateLotForm/CustomerCreateLotForm'
 import ReapplyForm from './ReapplyForm/ReapplyForm'
+import UpdatableImage from '../../shared/UpdatableImage/UpdatableImage'
 
 const OwnedLot = ({lot, categories}) => {
     const [showEdit, setShowEdit] = useState(false);
@@ -19,7 +20,7 @@ const OwnedLot = ({lot, categories}) => {
     
     return (
         <div className='lot-card'>
-          <img className='lot-image' alt='' src={`${process.env.REACT_APP_AUCTION_API_URL}/images/lot/${lot.id}/thumbnail`}/>
+          <UpdatableImage id={lot?.id} format={"thumbnail"}/>
           <div className='lot-description'>
             <h2 className='lot-name'>{lot.name}</h2>
             {

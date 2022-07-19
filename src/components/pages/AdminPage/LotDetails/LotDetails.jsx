@@ -177,7 +177,7 @@ const LotDetails = ({lot, statuses, categories, handleDelete, loading}) => {
                 <h2 className="bidder" style={{'alignSelf': 'center'}}>Rejected</h2>
                 <div>
                     <h2 className='bidder'>Reason:</h2>
-                    <h2 className="price-title">{lot?.feedback}</h2>
+                    <h2 className="price-title">{lot?.feedback?.length !== 0 ? lot?.feedback : 'Not specified' }</h2>
                 </div>
             </div>
         </div>

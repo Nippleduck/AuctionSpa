@@ -25,10 +25,10 @@ const LotPage = () => {
   const highestBid = useMemo(() => bids[0] ?? null, [bids]);
 
   const getPopular = useQuery(['popular', id.toString()], async() => 
-    await axios.get('/lots/popular/3').then(res => res.data), {
+    await axios.get(`/lots/${id}/popular/3`).then(res => res.data), {
         staleTime: 120000
     });
-  const popular = useMemo(() => getPopular.data?.filter(l => l.id != id) ?? [], [getPopular.data]);
+  const popular = useMemo(() => getPopular.data ?? [], [getPopular.data]);
 
   return (getLot.isFetching ? <div className="loading-container"><Spinner/></div> :
     <div className="page-lot-container">
@@ -102,7 +102,7 @@ const LotPage = () => {
          && <BiddingPanel lot={lot}/>}
       </div>
       <div className="recommended-container">
-      <h1 className="lot-title" style={{'marginBottom': '1.5rem', 'fontWeight': '400', 'fontSize': '2rem'}}>You may also like</h1>
+      <h1 className="lot-title" style={{'marginBottom': '1.5rem', 'fontWeight': '700', 'fontSize': '1.5rem'}}>You may also like</h1>
       <div className="recommended-list">
           {
             popular.map(l => <LotCard key={l.id} lot={l}/>)
