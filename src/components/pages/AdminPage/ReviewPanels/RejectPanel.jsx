@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import useAuthAxios from '../../../../hooks/useAuthAxios'
 import Spinner from '../../../shared/Spinner/Spinner';
 
-const RejectPanel = ({lot}) => {
+const RejectPanel = ({lot, setActive}) => {
   const axios = useAuthAxios();
 
   const [feedback, setFeedback] = useState('');
@@ -27,6 +27,7 @@ const RejectPanel = ({lot}) => {
       lot.reviewStatus = 'rejected';
       lot.feedback = feedback;
       setSuccess(true);
+      setActive(false);
     })
     .catch(() => setError('Could not reject lot'))
     .finally(() => setProcessing(false));

@@ -104,7 +104,7 @@ const mutation = useMutation(async lot => {
         style={
           {'width': '18rem',
             'height': '100%',
-           'objectFit' : image ? 'cover' : 'initial',
+            'objectFit' : image ? 'cover' : 'initial',
             'alignSelf': 'center',
             'marginBottom': '1rem'
             }}/>

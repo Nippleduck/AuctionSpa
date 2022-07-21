@@ -7,6 +7,7 @@ import Popup from '../../../shared/Popup/Popup'
 import AdminFilterPanel from '../AdminFilterPanel/AdminFilterPanel'
 import { useSearchParams } from 'react-router-dom'
 import AdminCreateLotForm from '../AdminCreateLotForm/AdminCreateLotForm'
+import { useQueryClient } from 'react-query'
 
 const Lot = ({lot, handleSelected}) => {
     const listLot = useMemo(() => lot ?? {}, [lot, lot?.openDate, lot?.closeDate]);
@@ -35,9 +36,9 @@ const Lot = ({lot, handleSelected}) => {
 }
 
 const options = [
-    {name: 'All', selected: true},
-    {name: 'Pending', selected: false},
-    {name: 'Complete', selected: false}
+    {name: 'All', selected: true, search: '', refetch: false},
+    {name: 'Pending', selected: false, search: 'pending', refetch: true},
+    {name: 'Complete', selected: false, search: 'complete', refetch: false}
 ];
 
 const LotsList = ({lots, statuses, categories, handleSelected, loading, status}) => {
@@ -47,17 +48,13 @@ const LotsList = ({lots, statuses, categories, handleSelected, loading, status})
     const [showFilters, setShowFilters] = useState(false);
     const [showCreateLot, setShowCreateLot] = useState(false);
 
+    const client = useQueryClient();
+
     const handleOptionChange = (option) => {
-        if (option === options[0].name){
-            setSearch("", {
-                replace: true
-            });
-        } else {
-            search.set('status', option.toLowerCase());
-            setSearch(search, {
-                replace: true
-            });
-        }
+        const selected = options.find(o => o.name === option);
+        search.set('status', selected.search);
+        setSearch(search, { replace: true });
+        if (selected.refetch) client.invalidateQueries(["reviews"]);
         setSelectedOption(option);
     }
 

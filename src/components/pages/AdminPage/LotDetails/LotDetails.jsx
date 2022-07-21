@@ -11,6 +11,7 @@ import RejectPanel from '../ReviewPanels/RejectPanel';
 import EditDetailsPanel from '../EditDetailsPanel/EditDetailsPanel';
 import EditBiddingPanel from '../EditBiddingPanel/EditBiddingPanel';
 import { useMutation, useQueryClient } from 'react-query';
+import UpdatableImage from '../../../shared/UpdatableImage/UpdatableImage';
 
 const LotDetails = ({lot, statuses, categories, handleDelete, loading}) => {
     const authAxios = useAuthAxios();
@@ -163,12 +164,8 @@ const LotDetails = ({lot, statuses, categories, handleDelete, loading}) => {
     <div className='admin-lot-container'>
     {
         lot && 
-        <img
-            key={lot?.id} 
-            className='lot-image' 
-            src={`${process.env.REACT_APP_AUCTION_API_URL}/images/lot/${lot.id}/large`} 
-            alt="lot-img" 
-            style={{'width':'30rem'}}/>}
+        <UpdatableImage id={lot?.id} format={"large"} style={{'width': '30rem'}}/>
+    }
     <div className="details-container">
     {
         lot?.reviewStatus.toLowerCase() === 'rejected' ?
@@ -250,7 +247,7 @@ const LotDetails = ({lot, statuses, categories, handleDelete, loading}) => {
                     statuses={statuses}/>
                 </Popup>
             <Popup active={showReject} setActive={setShowReject}>
-                <RejectPanel lot={lot}/>
+                <RejectPanel lot={lot} setActive={setShowReject}/>
             </Popup>
         </div>
     }

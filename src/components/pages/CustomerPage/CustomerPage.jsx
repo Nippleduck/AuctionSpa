@@ -12,6 +12,7 @@ import Spinner from '../../shared/Spinner/Spinner'
 import CustomerCreateLotForm from './CustomerCreateLotForm/CustomerCreateLotForm'
 import ReapplyForm from './ReapplyForm/ReapplyForm'
 import UpdatableImage from '../../shared/UpdatableImage/UpdatableImage'
+import { Link } from 'react-router-dom'
 
 const OwnedLot = ({lot, categories}) => {
     const [showEdit, setShowEdit] = useState(false);
@@ -84,8 +85,99 @@ const OwnedLot = ({lot, categories}) => {
       )
 }
 
-const ParticipatedLot = ({lot}) => {
-    
+const ParticipatedLot = ({lot, user}) => {
+    return (
+        <div className='lot-card'>
+          <img className='lot-image' alt='lot_img' src={`${process.env.REACT_APP_AUCTION_API_URL}/images/lot/${lot?.id}/thumbnail`}/>
+          <div className='lot-description'>
+            <h2 className='lot-name'>{lot.name}</h2>
+            {
+                lot.sold ?
+                <>
+                <div className="info-container">
+                <p>Duration: <span className="info-value">{`${moment(lot.openDate).format('LL')} - ${moment(lot.closeDate).format('LL')}`}</span></p>
+                </div>
+                <div className='info-container'>
+                <p>Category: <span className='info-value'>{lot.category}</span></p>
+                </div>
+                </>
+                :
+                <>
+                <div className='info-container'>
+                <p>Current price: <span className='info-value'>{lot.currentBid + lot.startPrice}</span></p>
+                </div>
+                <div className="info-container">
+                <p>Duration: <span className="info-value">{`${moment(lot.openDate).format('LL')} - ${moment(lot.closeDate).format('LL')}`}</span></p>
+                </div>
+                </>
+            }
+          </div>
+          <div className='customer-bid-info' style={{'marginTop': '1rem'}}>
+          {
+            lot?.sold ?
+            <div>
+                <div 
+                  className="buyer-container" 
+                  style={{
+                    'fontFamily': 'var(--text-font-primary)',
+                    'color': 'var(--color-secondary)'}}>
+                    {
+                        lot.highestBid.bidderId === user.id ?
+                        <>
+                            <h2 className="bidder" style={{'fontSize': '1rem'}}>Sold to you</h2>
+                        </>
+                        :
+                        <>
+                            <h2 className="price-title" style={{'fontSize': '0.9rem'}}>Sold to:</h2>
+                            <h2 className="bidder" style={{'fontSize': '1rem'}}>{lot?.highestBid.bidder}</h2>
+                        </>
+                    }
+                    <div className="bid-price">
+                        <h2 className="price-title" style={{'fontSize': '0.9rem'}}>Final price:</h2>
+                        <h2 className='price-value' style={{'fontSize': '1rem'}}>{lot?.startPrice + lot?.highestBid.price}</h2>
+                    </div>
+                </div>
+            </div>
+            :
+            <div>
+                <div 
+                  className="buyer-container" 
+                  style={{
+                    'fontFamily': 'var(--text-font-primary)',
+                    'color': 'var(--color-secondary)'}}>
+                    {
+                        lot.highestBid ? 
+                        <>
+                        {
+                            lot.highestBid.bidderId === user.id ? 
+                            <>
+                                <h2 className="bidder" style={{'fontSize': '1rem'}}>Your bid is highest</h2>
+                            </>
+                            :
+                            <>
+                                <h2 className="price-title" style={{'fontSize': '0.9rem'}}>Bidder:</h2>
+                                <h2 className="bidder" style={{'fontSize': '1rem'}}>{lot?.highestBid.bidder}</h2>
+                            </>
+                        }
+                        <div className="bid-price">
+                            <h2 className="price-title" style={{'fontSize': '0.9rem'}}>Amount:</h2>
+                            <h2 className='price-value' style={{'fontSize': '1rem'}}>{lot?.highestBid.price}</h2>
+                        </div>
+                        </>
+                        :
+                        <div className='content-empty'>No bids placed</div>
+                    }
+                </div>
+            </div>
+          }
+        <Link to={`../lots/${lot.id}`}>
+            <button className="bid-button">
+                Go to bid
+            </button>
+        </Link>
+          </div>
+        </div>
+    )
 }
 
 const CustomerPage = () => {
@@ -105,7 +197,9 @@ const CustomerPage = () => {
     const participated = useMemo(() => getParticipatedLots.data ?? [], [getParticipatedLots.data])
 
     const getCategories = useQuery(['categories'], async () => 
-    await axios.get('lots/categories').then(res => res.data));
+    await axios.get('lots/categories').then(res => res.data), {
+        staleTime: 120000
+    });
     const categories = useMemo(() => getCategories.data ?? [], [getCategories.data, getCategories.isLoading]);
 
     const [showCreateForm, setShowCreateForm] = useState(false);
@@ -142,7 +236,7 @@ const CustomerPage = () => {
                 :
                 <div className='scroll-lots-list'>
                 {
-                    participated.map(lot => <LotCard key={lot.id} lot={lot}/>)
+                    participated.map(lot => <ParticipatedLot key={lot.id} lot={lot} user={currentUser}/>)
                 }
             </div>
             }

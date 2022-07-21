@@ -151,3 +151,9 @@ label{
     flex-direction: row;
     margin-bottom: 0.3rem;
 }
+
+@media(max-width: 50rem){
+    .filter-panel{
+        display: none;
+    }
+}
